@@ -1,0 +1,729 @@
+/* =========================================================
+   GLOBAL RESET
+   Applies to: Entire application (all pages)
+   Purpose:
+   - Reset margin & padding
+   - Unified box-sizing
+   - Global font stack
+   ========================================================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif, "Inter", system-ui;
+}
+
+html,
+body {
+  height: 100%;
+  background: #f1f6f9;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overflow: hidden;
+}
+
+/* =========================================================
+   HIDE SCROLLBAR (KEEP SCROLL FUNCTIONAL)
+   Applies to:
+   - Dashboard content
+   - Main content area
+   ========================================================= */
+
+/* Chrome, Edge, Safari */
+.content::-webkit-scrollbar,
+.dashboard-scroll::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Firefox */
+.content,
+.dashboard-scroll {
+  scrollbar-width: none;
+}
+
+/* IE / Edge legacy */
+.content,
+.dashboard-scroll {
+  -ms-overflow-style: none;
+}
+
+
+/* =========================================================
+   ROOT LAYOUT CONTAINER
+   Used by: Layout.jsx
+   Purpose:
+   - Holds Sidebar + Main Content
+   ========================================================= */
+.layout {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* =========================================================
+   SIDEBAR STYLES
+   Used by: Sidebar.jsx
+   Includes:
+   - Logo
+   - Navigation menu
+   - User profile card
+   ========================================================= */
+.modern-sidebar {
+  width: 260px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.88);
+  border-right: 1px solid #dbe7ee;
+  padding: 25px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 1000;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+}
+
+/* Sidebar open state (mobile / toggle) */
+.modern-sidebar.open {
+  transform: translateX(0);
+}
+
+/* =========================================================
+   SIDEBAR LOGO
+   Used by: Sidebar.jsx (top branding section)
+   ========================================================= */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.logo h2 {
+  color: #0aa3b5;
+  font-weight: bold;
+}
+
+/* =========================================================
+   SIDEBAR MENU SECTIONS
+   Used by: Sidebar.jsx
+   ========================================================= */
+.menu-section {
+  margin-bottom: 25px;
+}
+
+.menu-title {
+  font-size: 0.75rem;
+  color: #94a8b8;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   SIDEBAR MENU ITEMS (NavLink)
+   Used by: Sidebar.jsx
+   ========================================================= */
+.menu-item {
+  display: block;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #1f2a37;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.menu-item:hover {
+  background: #e7f7fb;
+  color: #0891b2;
+}
+
+/* Active route styling */
+.menu-item.active {
+  background: linear-gradient(180deg, #0aa3b5, #0284c7);
+  color: #ffffff;
+}
+
+/* Logout hover override */
+.menu-item.logout:hover {
+  background: #ffe7ea;
+  color: #b91c1c;
+}
+
+/* =========================================================
+   SIDEBAR USER PROFILE CARD
+   Used by: Sidebar.jsx (bottom profile section)
+   ========================================================= */
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f8fbfd;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.user-card img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+}
+
+/* =========================================================
+   MAIN CONTENT AREA
+   Used by: Layout.jsx
+   Purpose:
+   - Right side content next to sidebar
+   ========================================================= */
+.content {
+  margin-left: 260px;
+  flex: 1;
+  min-height: 100vh;
+  overflow-y: auto;
+  padding: 20px 40px;
+}
+
+/* =========================================================
+   SIDEBAR OVERLAY (MOBILE)
+   Used by: Layout.jsx
+   Purpose:
+   - Close sidebar on outside click
+   ========================================================= */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 40, 60, 0.35);
+  z-index: 999;
+}
+
+/* =========================================================
+   MOBILE MENU TOGGLE BUTTON
+   Used by: Layout.jsx (hamburger button)
+   ========================================================= */
+.menu-toggle {
+  background: linear-gradient(180deg, #0aa3b5, #0284c7);
+  color: #ffffff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: none;
+}
+
+/* =========================================================
+   GLOBAL HEADER
+   Used by: Layout.jsx
+   Purpose:
+   - Displays dynamic page title
+   ========================================================= */
+.global-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  height: 56px;
+  margin-bottom: 16px;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 1.8rem;
+  color: #0f172a;
+  margin: 0;
+}
+
+/* =========================================================
+   DASHBOARD BASE LAYOUT
+   Used by:
+   - DoctorDashboard.jsx
+   - PatientDashboard.jsx
+   ========================================================= */
+.dashboard-page {
+  display: flex;
+  padding: 24px;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Sticky section inside dashboard pages */
+.dashboard-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #f1f6f9;
+  padding-bottom: 10px;
+}
+
+/* Scrollable dashboard content area */
+.dashboard-scroll {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  gap: 24px;
+}
+
+/* =========================================================
+   DOCTOR DASHBOARD – SUMMARY CARDS
+   Used by: DoctorDashboard.jsx
+   ========================================================= */
+.dashboard-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.summary-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+}
+
+.summary-card.highlight {
+  background: linear-gradient(180deg, #0aa3b5, #0284c7);
+  color: #ffffff;
+}
+
+/* =========================================================
+   PAGE HEADER ROW
+   Used by: AvailableDoctors.jsx
+   Purpose:
+   - Search inputs
+   - Location filter
+   ========================================================= */
+.page-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.page-heading {
+  font-size: 1.8rem;
+  color: #0f172a;
+  margin: 0;
+}
+
+.page-header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.page-header-actions input {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #cbdde6;
+  outline: none;
+  background: #ffffff;
+}
+
+/* =========================================================
+   SPECIALTY FILTER BAR
+   Used by: SpecialtyFilter.jsx
+   ========================================================= */
+.specialty-navbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.specialty-btn {
+  padding: 8px 14px;
+  border: none;
+  background: #e6f4f8;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.specialty-btn.active {
+  background: linear-gradient(180deg, #0aa3b5, #0284c7);
+  color: #ffffff;
+}
+
+/* =========================================================
+   AVAILABLE DOCTORS GRID
+   Used by: AvailableDoctors.jsx
+   ========================================================= */
+.doctor-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* =========================================================
+   DOCTOR CARD
+   Used by: DoctorCard.jsx
+   ========================================================= */
+.doctor-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  transition: 
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    filter 0.35s ease,
+    opacity 0.35s ease;
+}
+
+.doctor-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.doctor-card h3 {
+  margin-top: 12px;
+  font-size: 1.1rem;
+}
+
+.doctor-card p {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.doctor-card button {
+  margin-top: 12px;
+  background: linear-gradient(180deg, #0aa3b5, #0284c7);
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* =========================================================
+   DOCTOR CARD HOVER EFFECTS
+   Used by: AvailableDoctors.jsx
+   ========================================================= */
+
+/* Elevate hovered card */
+.doctor-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
+  z-index: 2;
+}
+
+/* Blur and dim non-hovered cards */
+.doctor-list:has(.doctor-card:hover) .doctor-card:not(:hover) {
+  filter: blur(3px);
+  opacity: 0.6;
+  transform: scale(0.97);
+}
+
+/* =========================================================
+   RESPONSIVE STYLES
+   Applies to: Entire application
+   ========================================================= */
+/* @media (max-width: 1024px) {
+  .content {
+    padding: 20px;
+  }
+} */
+
+/* @media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .modern-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .modern-sidebar.open {
+    transform: translateX(0);
+  }
+
+  body {
+    overflow-y: auto;
+  }
+
+  .content {
+    margin-left: 0;
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+    padding: 16px;
+  }
+
+  .dashboard-scroll {
+    overflow: visible;
+  }
+
+  .page-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .page-header-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .doctor-list {
+    grid-template-columns: 1fr;
+  }
+} */
+
+/* @media (max-width: 480px) {
+  .doctor-card img {
+    height: 160px;
+  }
+} */
+
+/* =========================================================
+   DASHBOARD GRID & CARDS
+   Used by: DoctorDashboard.jsx
+   ========================================================= */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.dashboard-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.dashboard-card-title {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  color: #0f172a;
+}
+
+/* =========================================================
+   ACTIVITY LIST ITEMS
+   Used by:
+   - DoctorDashboard.jsx
+   - PatientDashboard.jsx
+   ========================================================= */
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #e5eef3;
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-item p {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* =========================================================
+   STATUS BADGES
+   Used by:
+   - DoctorDashboard.jsx
+   - PatientDashboard.jsx
+   - AnimatedAppointments.jsx
+   ========================================================= */
+.status {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.status.booked {
+  background: #e0f7f5;
+  color: #0aa3b5;
+}
+
+.status.cancelled {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* =========================================================
+   DASHBOARD TABLES
+   Used by: DoctorDashboard.jsx
+   ========================================================= */
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.dashboard-table th,
+.dashboard-table td {
+  padding: 10px 0;
+  text-align: left;
+  border-bottom: 1px solid #e5eef3;
+}
+
+.dashboard-table th {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.dashboard-table tr:last-child td {
+  border-bottom: none;
+}
+
+@media (max-width: 1024px) {
+
+  .content {
+    padding: 16px 24px;
+  }
+
+  .dashboard-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .page-title,
+  .page-heading {
+    font-size: 1.5rem;
+  }
+
+  .doctor-card img {
+    height: 180px;
+  }
+}
+
+
+@media (max-width: 768px) {
+
+  /* Sidebar becomes off-canvas */
+  .modern-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .modern-sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Content fills screen */
+  .content {
+    margin-left: 0;
+    padding: 16px;
+  }
+
+  /* Show hamburger */
+  .menu-toggle {
+    display: inline-flex;
+  }
+
+  /* Header layout */
+  .global-header {
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+  }
+
+  .page-title {
+    text-align: left;
+    font-size: 1.4rem;
+  }
+
+  /* Page header controls */
+  .page-header-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .page-header-actions {
+    width: 100%;
+  }
+
+  .page-header-actions input {
+    flex: 1;
+  }
+
+  /* Dashboard cards */
+  .dashboard-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Doctor grid */
+  .doctor-list {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .page-title,
+  .page-heading {
+    font-size: 1.2rem;
+  }
+
+  /* Specialty filters */
+  .specialty-navbar {
+    justify-content: center;
+  }
+
+  .specialty-btn {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+  }
+
+  /* Doctor cards */
+  .doctor-card img {
+    height: 150px;
+  }
+
+  .doctor-card h3 {
+    font-size: 1rem;
+  }
+
+  .doctor-card p {
+    font-size: 0.85rem;
+  }
+
+  .doctor-card button {
+    width: 100%;
+  }
+
+  /* Sidebar user card */
+  .user-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  /* Tables */
+  .dashboard-table {
+    font-size: 0.8rem;
+  }
+}
+
+
+@media (hover: none) {
+  .doctor-card:hover {
+    transform: none;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  }
+
+  .doctor-list:has(.doctor-card:hover) .doctor-card:not(:hover) {
+    filter: none;
+    opacity: 1;
+    transform: none;
+  }
+}

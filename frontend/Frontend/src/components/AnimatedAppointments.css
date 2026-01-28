@@ -1,0 +1,119 @@
+/* =========================================================
+   HIDE SCROLLBAR FOR APPOINTMENTS LIST
+   Used by: AnimatedAppointments.jsx
+   ========================================================= */
+
+/* Chrome, Edge, Safari */
+.appointments-list::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+/* Firefox */
+.appointments-list {
+  scrollbar-width: none;
+}
+
+/* IE / Edge legacy */
+.appointments-list {
+  -ms-overflow-style: none;
+}
+
+
+.appointments-container {
+  width: 100%;
+}
+
+/* Filters */
+.appointments-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 6px 12px;
+  border-radius: 14px;
+  border: none;
+  background: #e6f4f8;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.filter-btn.active {
+  background: linear-gradient(180deg, #0aa3b5, #0284c7);
+  color: #fff;
+}
+
+/* Scroll list */
+.appointments-list {
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Item */
+.appointment-item-wrapper {
+  margin-bottom: 12px;
+}
+
+.appointment-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 14px;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+}
+
+.appointment-item p {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+/* Actions */
+.appointment-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.view-btn {
+  background: transparent;
+  border: 1px solid #0aa3b5;
+  color: #0aa3b5;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+/* Status */
+.status {
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.status.confirmed {
+  background: #e0f7f5;
+  color: #0aa3b5;
+}
+
+.status.applied {
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+.status.completed {
+  background: #e6f9ed;
+  color: #16a34a;
+}
+
+.status.cancelled {
+  background: #fee2e2;
+  color: #b91c1c;
+}

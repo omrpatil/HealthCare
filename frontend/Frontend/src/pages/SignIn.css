@@ -1,0 +1,206 @@
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
+
+/* =====================================================
+   ISOLATE SIGNIN FROM DASHBOARD (NO GLOBAL CHANGES)
+   ===================================================== */
+
+body:has(.signin-page) .layout .content {
+  margin-left: 0 !important;
+  padding: 0 !important;
+  height: auto !important;
+}
+
+body:has(.signin-page) .layout {
+  display: block !important;
+}
+
+/* ================= SIGN IN PAGE ================= */
+
+.signin-page {
+  position: fixed;
+  inset: 0;
+  background: #f4f6f8; /* off-white background */
+  overflow: hidden;
+  font-family: "Quicksand", sans-serif;
+  z-index: 9999;
+}
+
+/* ================= BACKGROUND GRID ================= */
+
+.signin-page section {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+.signin-page section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(#f4f6f8, #00e5ff, #f4f6f8);
+  animation: signin-animate 5s linear infinite;
+}
+
+@keyframes signin-animate {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.signin-page section span {
+  position: relative;
+  width: calc(6.25vw - 2px);
+  height: calc(6.25vw - 2px);
+  background: #e6ebf0;
+  z-index: 1;
+  transition: 1.5s;
+}
+
+.signin-page section span:hover {
+  background: #54dcee;
+  box-shadow: 0 0 12px #00e5ff;
+  transition: 0s;
+}
+
+/* ================= SIGNIN CARD (WHITE BOX) ================= */
+
+.signin-page .signin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block !important;
+  height: auto !important;
+  width: 400px;
+  background: #ffffff; /* WHITE CARD */
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.35);
+  z-index: 1000;
+}
+
+/* ================= CONTENT ================= */
+
+.signin-page .signin-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  
+}
+
+.signin-page .content h2 {
+  font-size: 2em;
+  color: #00e5ff;
+  text-transform: uppercase;
+  /* text-shadow: 0 0 10px #00e5ff; */
+}
+
+/* ================= FORM ================= */
+
+.signin-page .form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.signin-page .inputBox {
+  position: relative;
+  width: 100%;
+}
+
+.signin-page .inputBox input {
+  width: 100%;
+  background: #f1f3f5;
+  border: none;
+  outline: none;
+  padding: 22px 10px 8px;
+  border-radius: 6px;
+  color: #000;
+  font-size: 1em;
+}
+
+.signin-page .inputBox i {
+  position: absolute;
+  left: 0;
+  padding: 14px 10px;
+  color: #007c91;
+  font-style: normal;
+  transition: 0.4s;
+  pointer-events: none;
+}
+
+.signin-page .inputBox input:focus ~ i,
+.signin-page .inputBox input:valid ~ i {
+  transform: translateY(-7px);
+  font-size: 0.8em;
+  color: #00e5ff;
+  text-shadow: 0 0 6px #00e5ff;
+}
+
+/* ================= LINKS ================= */
+
+.signin-page .links {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9em;
+}
+
+.signin-page .links a {
+  color: #000;
+  text-decoration: none;
+}
+
+.signin-page .links a:nth-child(2) {
+  color: #00bcd4;
+  font-weight: 600;
+}
+
+/* ================= BUTTON ================= */
+
+.signin-page input[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background: #00e5ff;
+  color: #000;
+  font-weight: 700;
+  font-size: 1.2em;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  /* box-shadow: 0 0 18px #00e5ff; */
+}
+
+.signin-page input[type="submit"]:active {
+  opacity: 0.75;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+  .signin-page section span {
+    width: calc(10vw - 2px);
+    height: calc(10vw - 2px);
+  }
+}
+
+@media (max-width: 600px) {
+  .signin-page section span {
+    width: calc(20vw - 2px);
+    height: calc(20vw - 2px);
+  }
+
+  .signin-page .signin {
+    width: 90%;
+  }
+}
