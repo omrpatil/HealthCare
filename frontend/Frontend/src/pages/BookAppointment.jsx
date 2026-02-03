@@ -1,28 +1,103 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getAppointmentsByDoctor } from "../api/appointmentApi";   //added 1 Pm
+
 import { bookAppointment } from "../api/appointmentApi";
+import { validateAppointmentTime } from "../utils/appointmentTimeValidator";
+;
 
 function BookAppointment() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
-
   const doctorId = params.get("doctorId");
   const fee = Number(params.get("fee"));
+  const patientId = localStorage.getItem("userId");
+  const [appointments, setAppointments] = useState([]); 
 
   const [scheduledAt, setScheduledAt] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const patientId = localStorage.getItem("userId");
 
+useEffect(() => {
+  if (!doctorId) return;
+
+  getAppointmentsByDoctor(doctorId)
+    .then((res) => {
+      console.log("DOCTOR APPOINTMENTS:", res.data);
+      setAppointments(res.data || []);
+    })
+    .catch((err) => {
+      console.error("Failed to fetch doctor appointments", err);
+      setAppointments([]);
+    });
+}, [doctorId]);
+
+// useEffect(() => {
+//   if (!doctorId) return;
+
+//   getAppointmentsByDoctor(doctorId)
+//     .then((res) => {
+//       console.log("DOCTOR APPOINTMENTS:", res.data);
+//       setAppointments(res.data || []);
+//     })
+//     .catch((err) => {
+//       console.error("Failed to fetch doctor appointments", err);
+//       setAppointments([]);
+//     });
+// }, [doctorId]);
+
+
+//      useEffect(() => {
+//   if (!doctorId) return;
+
+// //  fetch(`http://localhost:8080/api/appointments/doctor/${doctorId}`)     
+// fetch(`http://localhost:8083/api/appointments/doctor/${doctorId}`)   //changed 1 Pm 02/02/2026
+
+
+//     .then(res => res.json())
+//     .then(data => {
+//       console.log("DOCTOR APPOINTMENTS:", data); // 👈 ADD THIS
+//       setAppointments(data || []);
+//     })
+//     .catch(() => setAppointments([]));
+// }, [doctorId]);
+
+
+  // ================= VALIDATION =================
   const validate = () => {
-    if (!doctorId) return "Doctor not selected";
-    if (!patientId) return "User not logged in";
-    if (!scheduledAt) return "Please select date and time";
+    if (!doctorId) return "Doctor not selected.";
+    if (!patientId) return "Please login to book appointment.";
+    if (!scheduledAt) return "Please select appointment date & time.";
+
+    const selectedDate = new Date(scheduledAt);
+    const now = new Date();
+
+    if (isNaN(selectedDate.getTime()))
+      return "Invalid date and time.";
+
+    
+
+    // ✅ FUTURE APPOINTMENT ONLY
+    if (selectedDate.getTime() <= now.getTime())
+      return "Appointment must be scheduled in the future.";
+
+    const timeError = validateAppointmentTime(
+    scheduledAt,
+    appointments
+);
+
+if (timeError) return timeError;
+
+
     return "";
   };
+  
 
+  // ================= SUBMIT =================
   const handleSubmit = async () => {
+    if (loading) return; // prevent double click
+
     const validationError = validate();
     if (validationError) {
       setError(validationError);
@@ -36,16 +111,20 @@ function BookAppointment() {
       const payload = {
         doctorId: Number(doctorId),
         patientId: Number(patientId),
-        scheduledAt: scheduledAt,
+        scheduledAt,
+        consultationFee: fee,
         type: "CONSULTATION",
       };
 
       console.log("BOOK PAYLOAD:", payload);
 
-      // ✅ BACKEND APPOINTMENT BOOKING
+      // ✅ BACKEND BOOKING
       await bookAppointment(payload);
+      // ✅ Generate prescription after payment (frontend only)
 
-      // ✅ MOCK PAYMENT CREATION (FRONTEND)
+
+
+      // ✅ TEMP PAYMENT RECORD (frontend mock only)
       const payments =
         JSON.parse(localStorage.getItem("payments")) || [];
 
@@ -60,20 +139,22 @@ function BookAppointment() {
         date: null,
       });
 
-      localStorage.setItem(
-        "payments",
-        JSON.stringify(payments)
-      );
+      localStorage.setItem("payments", JSON.stringify(payments));
 
-      alert("✅ Appointment booked. Please complete payment.");
+      alert("✅ Appointment booked successfully. Please complete payment.");
 
-      setScheduledAt("");
+    
 
-      // ✅ REDIRECT TO PAYMENTS
-      navigate("/payments");
+      
+      
+
+      // ✅ SAFE REDIRECT
+      navigate("/dashboard");
     } catch (err) {
       console.error("BOOK ERROR:", err.response?.data || err);
-      setError("Failed to book appointment. Please try again.");
+      setError(
+        "Unable to book appointment right now. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -82,17 +163,13 @@ function BookAppointment() {
   return (
     <div className="dashboard-page">
       <div className="dashboard-scroll">
-        <div
-          className="dashboard-card"
-          style={{ maxWidth: "420px" }}
-        >
-          <h3 className="dashboard-card-title">
-            Book Appointment
-          </h3>
+        <div className="dashboard-card" style={{ maxWidth: "420px" }}>
+          <h3 className="dashboard-card-title">Book Appointment</h3>
 
           <p>
-            Doctor ID: <strong>{doctorId}</strong>
+            Doctor ID: <strong>{doctorId || "-"}</strong>
           </p>
+
           <p>
             Consultation Fee: <strong>₹{fee}</strong>
           </p>
@@ -100,7 +177,9 @@ function BookAppointment() {
           <input
             type="datetime-local"
             value={scheduledAt}
+            min={new Date().toISOString().slice(0, 16)} // ✅ UI-level future guard
             onChange={(e) => setScheduledAt(e.target.value)}
+            disabled={loading}
             style={{
               width: "100%",
               padding: "10px",
@@ -111,7 +190,7 @@ function BookAppointment() {
           />
 
           {error && (
-            <p style={{ color: "red", marginBottom: "12px" }}>
+            <p style={{ color: "#dc2626", marginBottom: "12px" }}>
               {error}
             </p>
           )}
@@ -123,14 +202,16 @@ function BookAppointment() {
               width: "100%",
               padding: "10px",
               borderRadius: "6px",
-              background:
-                "linear-gradient(180deg, #0aa3b5, #0284c7)",
+              background: loading
+                ? "#94a3b8"
+                : "linear-gradient(180deg, #0aa3b5, #0284c7)",
               color: "#fff",
               border: "none",
               cursor: loading ? "not-allowed" : "pointer",
+              fontWeight: "600",
             }}
           >
-            {loading ? "Booking..." : "Confirm Booking"}
+            {loading ? "Booking appointment..." : "Confirm Booking"}
           </button>
         </div>
       </div>

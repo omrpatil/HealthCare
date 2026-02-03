@@ -1,0 +1,45 @@
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.confidential-popup {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  max-width: 480px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.confidential-title {
+  color: #ff0000;      /* 🔴 PURE RED */
+  font-size: 22px;     /* Slightly bigger */
+  font-weight: 800;    /* Strong emphasis */
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+.confidential-popup {
+  border-top: 5px solid #ff0000;
+}
+
+
+.confidential-btn {
+  margin-top: 16px;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #dc2626;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confidential-btn:hover {
+  background: #b91c1c;
+}

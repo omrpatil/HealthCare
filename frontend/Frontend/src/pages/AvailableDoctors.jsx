@@ -2,18 +2,29 @@ import { useEffect, useState } from "react";
 import DoctorCard from "../components/DoctorCard";
 import SpecialtyFilter from "../components/SpecialtyFilter";
 import { getAllDoctors } from "../api/doctorApi";
+import { useNavigate } from "react-router-dom"; 
 
 function AvailableDoctors() {
+  const navigate = useNavigate();
+
   const [doctors, setDoctors] = useState([]);
   const [search, setSearch] = useState("");
   const [location, setLocation] = useState("");
   const [active, setActive] = useState("all");
 
+  // ✅ Doctor select handler
+  const handleSelectDoctor = (doctor) => {
+    localStorage.setItem("selectedDoctorId", doctor.doctorId);
+    localStorage.setItem("selectedDoctorName", doctor.doctorName);
+    localStorage.setItem("selectedSpecialization", doctor.specialization);
+
+    navigate("/book-appointment");
+  };
+
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
         const res = await getAllDoctors(active);
-        console.log("Doctors API:", res.data);
         setDoctors(res.data);
       } catch (err) {
         console.error(err);
@@ -27,15 +38,10 @@ function AvailableDoctors() {
     const name = doctor?.doctorName || "";
     const loc = doctor?.location || "";
 
-    const matchSearch = name
-      .toLowerCase()
-      .includes(search.toLowerCase());
-
-    const matchLocation = loc
-      .toLowerCase()
-      .includes(location.toLowerCase());
-
-    return matchSearch && matchLocation;
+    return (
+      name.toLowerCase().includes(search.toLowerCase()) &&
+      loc.toLowerCase().includes(location.toLowerCase())
+    );
   });
 
   return (
@@ -68,6 +74,7 @@ function AvailableDoctors() {
               <DoctorCard
                 key={doctor.doctorId}
                 doctor={doctor}
+                onSelect={handleSelectDoctor}
               />
             ))
           ) : (

@@ -18,8 +18,7 @@ body {
   height: 100%;
   background: #f1f6f9;
   overflow-x: hidden;
-  overflow-y: auto;
-  overflow: hidden;
+  overflow-y: auto;   /* ✅ KEEP SCROLL */
 }
 
 /* =========================================================

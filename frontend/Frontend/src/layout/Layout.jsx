@@ -1,47 +1,29 @@
-import { useState } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 
 function Layout() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const location = useLocation();
+  const token = localStorage.getItem("token");
 
-  const pageTitles = {
-    "/dashboard": "Dashboard",
-    "/available-doctors": "Available Doctors",
-    "/book-appointment": "Book Appointment",
-    "/medical-reports": "Medical Reports",
-    "/payments": "Payments",
-    "/settings": "Settings",
-    "/profile": "My Profile",
-  };
-
-  const title = pageTitles[location.pathname] || "";
+  if (!token) {
+    return <Navigate to="/signin" replace />;
+  }
 
   return (
-    <div className="layout">
-      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+    <div style={{ display: "flex", minHeight: "100vh" }}>
+      {/* SIDEBAR */}
+      <Sidebar />
 
-      {sidebarOpen && (
-        <div
-          className="sidebar-overlay"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      <main className="content">
-        {/* GLOBAL HEADER */}
-        <div className="top-header global-header">
-          <button
-            className="menu-toggle"
-            onClick={() => setSidebarOpen(true)}
-          >
-            ☰
-          </button>
-
-          <h1 className="page-title">{title}</h1>
-        </div>
-
+      {/* MAIN CONTENT */}
+      <main
+        style={{
+          marginLeft: "260px",
+          width: "100%",
+          padding: "20px",
+          background: "#f8fafc",
+          minHeight: "100vh",
+          overflowY: "auto",
+        }}
+      >
         <Outlet />
       </main>
     </div>

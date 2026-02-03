@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 
-function Sidebar({ sidebarOpen, setSidebarOpen }) {
+function Sidebar() {
   const navigate = useNavigate();
 
   const userName = localStorage.getItem("name") || "User";
@@ -11,43 +11,48 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   };
 
   return (
-    <aside className={`modern-sidebar ${sidebarOpen ? "open" : ""}`}>
+    <aside className="modern-sidebar">
       <div>
+        {/* LOGO */}
         <div className="logo">
           <span className="logo-icon">🩺</span>
           <h2>HelloDoc</h2>
         </div>
 
+        {/* MAIN MENU */}
         <div className="menu-section">
           <p className="menu-title">MAIN</p>
 
-          <NavLink to="/dashboard" end className="menu-item" onClick={() => setSidebarOpen(false)}>
+          <NavLink to="/dashboard" className="menu-item">
             Dashboard
           </NavLink>
 
-          <NavLink to="/available-doctors" className="menu-item" onClick={() => setSidebarOpen(false)}>
+          <NavLink to="/doctors" className="menu-item">
             Available Doctors
           </NavLink>
 
-          <NavLink to="/book-appointment" className="menu-item" onClick={() => setSidebarOpen(false)}>
+          <NavLink to="/book-appointment" className="menu-item">
             Book Appointment
           </NavLink>
 
-          <NavLink to="/medical-reports" className="menu-item" onClick={() => setSidebarOpen(false)}>
+          <NavLink to="/reports" className="menu-item">
             Medical Reports
           </NavLink>
 
-          <NavLink to="/payments" className="menu-item" onClick={() => setSidebarOpen(false)}>
-            Payments
+         
+
+          <NavLink to="/profile" className="menu-item">
+            Profile
+          </NavLink>
+
+          <NavLink to="/settings" className="menu-item">
+            Settings
           </NavLink>
         </div>
 
+        {/* ACCOUNT */}
         <div className="menu-section">
           <p className="menu-title">ACCOUNT</p>
-
-          <NavLink to="/settings" className="menu-item" onClick={() => setSidebarOpen(false)}>
-            Settings
-          </NavLink>
 
           <div className="menu-item logout" onClick={handleLogout}>
             Logout
@@ -55,13 +60,10 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         </div>
       </div>
 
-      {/* USER PROFILE BOTTOM */}
+      {/* USER PROFILE */}
       <div
         className="user-card clickable"
-        onClick={() => {
-          setSidebarOpen(false);
-          navigate("/profile");
-        }}
+        onClick={() => navigate("/profile")}
       >
         <img src="https://i.pravatar.cc/100" alt="User" />
         <strong>{userName}</strong>

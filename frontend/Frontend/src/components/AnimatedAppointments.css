@@ -1,61 +1,70 @@
-/* =========================================================
-   HIDE SCROLLBAR FOR APPOINTMENTS LIST
-   Used by: AnimatedAppointments.jsx
-   ========================================================= */
-
-/* Chrome, Edge, Safari */
-.appointments-list::-webkit-scrollbar {
-  width: 0;
-  background: transparent;
-}
-
-/* Firefox */
-.appointments-list {
-  scrollbar-width: none;
-}
-
-/* IE / Edge legacy */
-.appointments-list {
-  -ms-overflow-style: none;
-}
-
+/* ===========================
+   APPOINTMENTS LAYOUT
+=========================== */
 
 .appointments-container {
   width: 100%;
 }
 
-/* Filters */
+/* ===========================
+   FILTERS (ALL / BOOKED / ...)
+=========================== */
+
 .appointments-filters {
   display: flex;
   gap: 10px;
-  margin-bottom: 16px;
+  margin: 12px 0 18px;
   flex-wrap: wrap;
 }
 
 .filter-btn {
-  padding: 6px 12px;
-  border-radius: 14px;
-  border: none;
-  background: #e6f4f8;
+  padding: 6px 14px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
   cursor: pointer;
   font-size: 0.75rem;
+  font-weight: 600;
+  color: #334155;
+  transition: all 0.25s ease;
+}
+
+.filter-btn:hover {
+  background: #e0f2fe;
+  border-color: #38bdf8;
 }
 
 .filter-btn.active {
   background: linear-gradient(180deg, #0aa3b5, #0284c7);
   color: #fff;
+  border-color: transparent;
+  box-shadow: 0 6px 16px rgba(2, 132, 199, 0.35);
 }
 
-/* Scroll list */
+/* ===========================
+   SCROLLABLE LIST
+=========================== */
+
 .appointments-list {
-  max-height: 280px;
+  max-height: 420px;
   overflow-y: auto;
-  padding-right: 4px;
+  padding-right: 6px;
 }
 
-/* Item */
+/* Hide scrollbar */
+.appointments-list::-webkit-scrollbar {
+  width: 0;
+}
+.appointments-list {
+  scrollbar-width: none;
+}
+
+/* ===========================
+   APPOINTMENT CARD
+=========================== */
+
 .appointment-item-wrapper {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .appointment-item {
@@ -63,57 +72,112 @@
   justify-content: space-between;
   align-items: center;
   background: #ffffff;
-  padding: 14px;
-  border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+  padding: 16px 18px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
+.appointment-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.12);
+}
+
+/* LEFT CONTENT */
 .appointment-item p {
-  font-size: 0.8rem;
-  color: #64748b;
+  margin: 0;
+  font-size: 0.85rem;
+  color: #475569;
 }
 
-/* Actions */
+.appointment-item strong {
+  font-size: 0.9rem;
+  color: #0f172a;
+}
+
+/* ===========================
+   STATUS BADGES
+=========================== */
+
+.status {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.7rem;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+/* BOOKED */
+.status.BOOKED {
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+/* COMPLETED */
+.status.COMPLETED {
+  background: #ecfdf5;
+  color: #16a34a;
+}
+
+/* CANCELLED */
+.status.CANCELLED {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* CONFIRMED (future-safe) */
+.status.CONFIRMED {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+/* ===========================
+   ACTION BUTTONS
+=========================== */
+
 .appointment-actions {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
+.appointment-actions button {
+  padding: 6px 14px;
+  font-size: 0.75rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+/* Pay button already good – no change */
+
+/* Cancel */
 .view-btn {
   background: transparent;
-  border: 1px solid #0aa3b5;
-  color: #0aa3b5;
-  padding: 4px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.75rem;
+  border: 1px solid #ef4444;
+  color: #ef4444;
 }
 
-/* Status */
-.status {
-  font-size: 0.7rem;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-weight: 600;
-}
-
-.status.confirmed {
-  background: #e0f7f5;
-  color: #0aa3b5;
-}
-
-.status.applied {
-  background: #fff7ed;
-  color: #ea580c;
-}
-
-.status.completed {
-  background: #e6f9ed;
-  color: #16a34a;
-}
-
-.status.cancelled {
+.view-btn:hover {
   background: #fee2e2;
-  color: #b91c1c;
+}
+
+/* ===========================
+   HEADER TEXT (Hello, Himanshu)
+=========================== */
+
+.dashboard-card h3,
+.dashboard-page h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.dashboard-page p {
+  color: #64748b;
 }

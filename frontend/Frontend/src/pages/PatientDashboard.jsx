@@ -1,55 +1,107 @@
 import { useEffect, useState } from "react";
 import AnimatedAppointments from "../components/AnimatedAppointments";
-import { getAppointmentsByPatient } from "../api/appointmentApi";
+
+
+
+import PaymentModal from "../components/PaymentModal"; // ✅ NEW
+import {
+  getAppointmentsByPatient,
+  updateAppointmentStatus,
+} from "../api/appointmentApi";
+import { makePayment } from "../api/paymentApi";
 
 function PatientDashboard() {
   const patientName = localStorage.getItem("name") || "User";
   const patientId = localStorage.getItem("userId");
 
   const [appointments, setAppointments] = useState([]);
-  const [doctorMap, setDoctorMap] = useState({});
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("ALL");
 
-  useEffect(() => {
-    if (!patientId) {
-      setLoading(false);
-      return;
+  // ✅ Payment modal state
+  const [activePayment, setActivePayment] = useState(null);
+
+  // ================= CANCEL =================
+  const handleCancel = async (appointment) => {
+    try {
+      await updateAppointmentStatus(appointment.id, "CANCELLED");
+
+      setAppointments((prev) =>
+        prev.map((a) =>
+          a.id === appointment.id
+            ? { ...a, status: "CANCELLED" }
+            : a
+        )
+      );
+    } catch (err) {
+      alert("Cancel failed");
+      console.error(err);
     }
+  };
+
+  // ================= PAY (OPEN MODAL ONLY) =================
+  const handlePay = (appointment) => {
+    setActivePayment(appointment);
+  };
+
+  // ================= CONFIRM PAYMENT =================
+  const confirmPayment = async ({ appointmentId, amount, method }) => {
+    try {
+      // 💳 Call payment-service
+      await makePayment({
+        appointmentId,
+        amount,
+        method,
+      });
+
+      // ✅ Mark appointment as COMPLETED
+      await updateAppointmentStatus(appointmentId, "COMPLETED");
+
+      setAppointments((prev) =>
+        prev.map((a) =>
+          a.id === appointmentId
+            ? { ...a, status: "COMPLETED" }
+            : a
+        )
+      );
+
+
+      setActivePayment(null);
+      alert("Payment successful");
+    } catch (err) {
+      alert("Payment failed");
+      console.error(err);
+    }
+  };
+
+  // ================= FETCH =================
+  useEffect(() => {
+    if (!patientId) return;
 
     const fetchAppointments = async () => {
       try {
-        // 1️⃣ Fetch appointments
         const res = await getAppointmentsByPatient(patientId);
 
+        // const formatted = res.data.map((a) => ({
+        //   id: a.id,
+        //   // doctorName: a.doctorName,
+        //   doctorId: a.doctorId,
+        //   scheduledAt: new Date(a.scheduledAt).toLocaleString(),
+        //   status: a.status,
+        //   fee: a.consultationFee,    
+        // }));
+
+        // setAppointments(formatted);
         const formatted = res.data.map((a) => ({
           id: a.id,
           doctorId: a.doctorId,
           scheduledAt: new Date(a.scheduledAt).toLocaleString(),
           status: a.status,
+          fee: a.consultationFee, // ✅ ONLY backend value
         }));
 
-        setAppointments(formatted);
+        setAppointments(formatted);        // ⭐ USE formatted
 
-        // 2️⃣ Fetch doctor names (unique doctorIds only)
-        const uniqueDoctorIds = [
-          ...new Set(res.data.map((a) => a.doctorId)),
-        ];
-
-        const map = {};
-
-        for (const id of uniqueDoctorIds) {
-          try {
-            const response = await fetch(
-              `http://localhost:8082/api/doctors/${id}`
-            );
-            const data = await response.json();
-            map[id] = data.doctorName;
-          } catch {
-            map[id] = "Doctor";
-          }
-        }
-
-        setDoctorMap(map);
       } catch (err) {
         console.error("Fetch appointments error", err);
       } finally {
@@ -60,33 +112,50 @@ function PatientDashboard() {
     fetchAppointments();
   }, [patientId]);
 
+  // ================= FILTER =================
+  const filteredAppointments =
+    filter === "ALL"
+      ? appointments
+      : appointments.filter((a) => a.status === filter);
+
   return (
     <div className="dashboard-page">
-      <div className="dashboard-scroll">
-        <div className="dashboard-card" style={{ marginBottom: "24px" }}>
-          <h3>Hello, {patientName} 👋</h3>
-          <p style={{ color: "#64748b", marginTop: "6px" }}>
-            Here’s a quick look at your appointments
-          </p>
-        </div>
+      <h3>Hello, {patientName} 👋</h3>
 
-        <div className="dashboard-card">
-          <h3 className="dashboard-card-title">Your Appointments</h3>
-
-          {loading ? (
-            <p>Loading appointments...</p>
-          ) : appointments.length > 0 ? (
-            <AnimatedAppointments
-              appointments={appointments.map((a) => ({
-                ...a,
-                doctorName: doctorMap[a.doctorId] || "Doctor",
-              }))}
-            />
-          ) : (
-            <p>No appointments found</p>
-          )}
-        </div>
+      {/* FILTERS */}
+      <div className="appointments-filters">
+        {["ALL", "BOOKED", "COMPLETED", "CANCELLED"].map((s) => (
+          <button
+            key={s}
+            className={filter === s ? "active" : ""}
+            onClick={() => setFilter(s)}
+          >
+            {s}
+          </button>
+        ))}
       </div>
+
+      {/* LIST */}
+      {loading ? (
+        <p>Loading appointments...</p>
+      ) : filteredAppointments.length > 0 ? (
+        <AnimatedAppointments
+          appointments={filteredAppointments}
+          onPay={handlePay}
+          onCancel={handleCancel}
+        />
+      ) : (
+        <p>No appointments found</p>
+      )}
+
+      {/* 💳 PAYMENT MODAL */}
+      {activePayment && (
+        <PaymentModal
+          appointment={activePayment}
+          onConfirm={confirmPayment}
+          onClose={() => setActivePayment(null)}
+        />
+      )}
     </div>
   );
 }

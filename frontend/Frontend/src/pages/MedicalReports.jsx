@@ -1,56 +1,86 @@
-import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import "./MedicalReports.css";
 
 function MedicalReports() {
-  const [reports, setReports] = useState([]);
+  const navigate = useNavigate();
+  const [showPopup, setShowPopup] = useState(true);
 
-  useEffect(() => {
-    const stored =
-      JSON.parse(localStorage.getItem("medicalReports")) || [];
-    setReports(stored);
-  }, []);
+  const handleOk = () => {
+    setShowPopup(false);
+    navigate("/dashboard"); // ✅ redirect to dashboard
+  };
 
   return (
     <div className="dashboard-page">
-      <div className="dashboard-scroll">
-        <div className="dashboard-card">
-          <h3 className="dashboard-card-title">Medical Reports</h3>
+      <h2>Medical Reports</h2>
 
-          {reports.length === 0 ? (
-            <p>No medical reports available.</p>
-          ) : (
-            reports.map((r, index) => (
-              <div
-                key={index}
-                style={{
-                  border: "1px solid #e2e8f0",
-                  padding: "16px",
-                  borderRadius: "10px",
-                  marginBottom: "12px",
-                  background: "#f8fafc",
-                }}
-              >
-                <p><b>Appointment ID:</b> {r.appointmentId}</p>
-                <p><b>Doctor:</b> {r.doctorName}</p>
-                <p><b>Diagnosis:</b> {r.diagnosis}</p>
-                <p><b>Prescription:</b> {r.prescription}</p>
-                <p><b>Date:</b> {r.date}</p>
+      {/* CONFIDENTIAL POPUP */}
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="confidential-popup">
+            <h3 className="confidential-title">
+              ⚠ Confidential Medical Notice
+            </h3>
 
-                <button
-                  style={{
-                    marginTop: "10px",
-                    padding: "8px 14px",
-                    borderRadius: "6px",
-                    border: "none",
-                    background:
-                      "linear-gradient(180deg,#0aa3b5,#0284c7)",
-                    color: "#fff",
-                  }}
-                >
-                  Download Report
-                </button>
-              </div>
-            ))
-          )}
+            <p>
+              This medical report contains sensitive and confidential patient
+              information.
+            </p>
+
+            <p>
+              For privacy and medical regulations, online access to this report
+              is restricted.
+            </p>
+
+            <p>
+              Please visit the hospital or consult your doctor to collect the
+              report. Online report download is not available.
+            </p>
+
+            <button
+              className="confidential-btn"
+              onClick={handleOk}   // ✅ FIXED
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* DUMMY MEDICAL REPORT */}
+      <div className="report-card">
+        <h3>Hospital Medical Report</h3>
+
+        <div className="report-meta">
+          <p><strong>Patient Name:</strong> #########</p>
+          <p><strong>Doctor:</strong> ############(@)</p>
+          <p><strong>Date:</strong> ######</p>
+          <p><strong>Report ID:</strong> ##</p>
+        </div>
+
+        <hr />
+
+        <h4>Diagnosis</h4>
+        <p>
+          ##########################
+          #########################
+        </p>
+
+        <h4>Prescribed Treatment</h4>
+        <ul>
+          <li>################# – once daily</li>
+          <li>################# – once daily</li>
+          <li>################</li>
+          <li>#############</li>
+        </ul>
+
+        <h4>Doctor’s Advice</h4>
+        <p>###############################</p>
+
+        <div className="report-footer">
+          <p><strong>Status:</strong> Verified</p>
+          <p><strong>Note:</strong> Online download is disabled</p>
         </div>
       </div>
     </div>

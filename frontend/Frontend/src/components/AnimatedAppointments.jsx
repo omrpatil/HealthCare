@@ -1,56 +1,64 @@
-function AnimatedAppointments({ appointments, onPay, onRate }) {
+function AnimatedAppointments({ appointments, onPay, onCancel }) {
   return (
     <div>
-      {appointments.map((appointment, index) => (
+      {appointments.map((appointment) => (
         <div
-          key={index}
+          key={appointment.id}
           style={{
             marginBottom: "16px",
-            padding: "12px",
-            borderRadius: "8px",
+            padding: "14px",
+            borderRadius: "10px",
             background: "#f8fafc",
+            boxShadow: "0 6px 18px rgba(15, 23, 42, 0.06)",
           }}
         >
-          <p><strong>Doctor:</strong> {appointment.doctorName}</p>
+          <p>
+            <strong>Doctor ID:</strong> {appointment.doctorId}
+          </p>
+          {/* <p><strong>Doctor:</strong> {appointment.doctorName}</p> */}
           <p><strong>Date:</strong> {appointment.scheduledAt}</p>
-          <p><strong>Status:</strong> {appointment.status}</p>
 
-          {/* ✅ PAY BUTTON */}
-          {appointment.status === "BOOKED" && onPay && (
-            <button
-              onClick={() => onPay(appointment)}
-              style={{
-                marginTop: "8px",
-                padding: "8px 14px",
-                background: "#0ea5e9",
-                color: "#fff",
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer",
-              }}
-            >
-              Pay
-            </button>
-          )}
+          <span className={`status ${appointment.status.toLowerCase()}`}>
+            {appointment.status}
+          </span>
 
-          {/* ⭐ RATE BUTTON */}
-          {appointment.status === "COMPLETED" && onRate && (
-            <button
-              onClick={() => onRate(appointment)}
-              style={{
-                marginTop: "8px",
-                marginLeft: "8px",
-                padding: "8px 14px",
-                background: "#22c55e",
-                color: "#fff",
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer",
-              }}
-            >
-              Rate Doctor
-            </button>
-          )}
+          <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
+            
+            {/* PAY */}
+            {appointment.status === "BOOKED" && (
+              <button
+                //onClick={() => onPay(appointment)}
+                onClick={() => onPay({ ...appointment, fee: appointment.fee })}
+                style={{
+                  padding: "6px 14px",
+                  background: "#0ea5e9",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                }}
+              >
+                Pay
+              </button>
+            )}
+
+            {/* CANCEL */}
+            {appointment.status === "BOOKED" && (
+              <button
+                onClick={() => onCancel(appointment)}
+                style={{
+                  padding: "6px 14px",
+                  background: "#ef4444",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                }}
+              >
+                Cancel
+              </button>
+            )}
+          </div>
         </div>
       ))}
     </div>

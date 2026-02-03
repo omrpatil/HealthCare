@@ -1,9 +1,7 @@
-import axios from "./axios";
-
-const BASE = "http://localhost:8081/api/users";
+import axiosInstance from "./axios";
 
 export const loginUser = (data) =>
-  axios.post(`${BASE}/login`, data);
+  axiosInstance.post("/users/login", data);
 
 export const registerUser = (data) =>
-  axios.post(`${BASE}/register`, data);
+  axiosInstance.post("/users/register", data);

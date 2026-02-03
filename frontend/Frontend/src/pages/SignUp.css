@@ -3,7 +3,7 @@
 /* ================= PAGE ISOLATION ================= */
 
 body:has(.signup-page) {
-  overflow: hidden;
+  overflow-y: auto; /* ✅ ALLOW SCROLL */
 }
 
 body:has(.signup-page) .layout {
@@ -18,8 +18,9 @@ body:has(.signup-page) .content {
 /* ================= SIGNUP PAGE ================= */
 
 .signup-page {
-  position: fixed;
-  inset: 0;
+  position: relative;            /* ✅ CHANGED */
+  min-height: 100vh;             /* ✅ CHANGED */
+  overflow-y: auto;              /* ✅ CHANGED */
   background: #f4f6f8;
   font-family: "Quicksand", sans-serif;
   z-index: 9999;
@@ -28,14 +29,13 @@ body:has(.signup-page) .content {
 /* ================= BACKGROUND GRID ================= */
 
 .signup-page section {
-  position: absolute;
+  position: fixed;               /* ✅ KEEP GRID FIXED */
   inset: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   grid-auto-rows: 80px;
   gap: 2px;
   overflow: hidden;
-  
 }
 
 .signup-page section::before {
@@ -71,21 +71,16 @@ body:has(.signup-page) .content {
 /* ================= SIGNUP CARD ================= */
 
 .signup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
+  position: relative;            /* ✅ CHANGED */
+  margin: 60px auto;             /* ✅ CHANGED */
   width: 420px;
   max-width: 92vw;
-
   background: #ffffff;
   padding: 28px;
   border-radius: 14px;
   box-shadow: 0 0 30px rgba(0, 229, 255, 0.35);
   z-index: 10;
 }
-
 
 .signup h2 {
   text-align: center;
@@ -113,7 +108,7 @@ body:has(.signup-page) .content {
   width: 100%;
 }
 
-/* ================= ROW FIX (CRITICAL) ================= */
+/* ================= ROW FIX ================= */
 
 .row {
   display: flex;
@@ -123,7 +118,7 @@ body:has(.signup-page) .content {
 
 .row input {
   flex: 1;
-  min-width: 0; /* prevents overflow */
+  min-width: 0;
 }
 
 /* ================= ROLE SWITCH ================= */
@@ -171,7 +166,7 @@ body:has(.signup-page) .content {
   text-decoration: none;
 }
 
-/* ================= RESPONSIVE FIX ================= */
+/* ================= RESPONSIVE ================= */
 
 @media (max-width: 600px) {
   .signup {
@@ -179,15 +174,9 @@ body:has(.signup-page) .content {
     padding: 22px;
   }
 
-  /* 🔥 MATCH SIGNIN GRID SCALE */
   .signup-page section {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     grid-auto-rows: 120px;
-  }
-
-  .signin-page section span {
-    width: calc(20vw - 2px);
-    height: calc(20vw - 2px);
   }
 
   .row {

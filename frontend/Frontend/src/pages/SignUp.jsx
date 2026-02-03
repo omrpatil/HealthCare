@@ -1,5 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axios";
+
 import "./SignUp.css";
 
 function SignUp() {
@@ -48,18 +49,21 @@ function SignUp() {
     };
 
     try {
-      await axios.post(
-        "http://localhost:8081/api/users/register",
-        payload
-      );
+  await axiosInstance.post("/users/register", payload);
 
-      alert("✅ Account created successfully");
-      window.location.href = "/signin";
-    } catch (err) {
-      console.error(err);
-      alert("❌ Signup failed");
-    }
+  alert(
+    role === "DOCTOR"
+      ? "✅ Registration submitted. Wait for admin approval."
+      : "✅ Account created successfully"
+  );
+
+  window.location.href = "/signin";
+} catch (err) {
+  console.error(err);
+  alert("❌ Signup failed");
+}
   };
+
 
   return (
     <div className="signup-page">
@@ -160,6 +164,13 @@ function SignUp() {
             </button>
           </div>
 
+          {/* Info for existing doctors */}
+          {role === "DOCTOR" && (
+            <p style={{ fontSize: "13px", color: "#ff7777" }}>
+              Existing doctors should login using Email & Password.
+            </p>
+          )}
+
           {/* Patient Fields */}
           {role === "PATIENT" && (
             <input
@@ -171,7 +182,7 @@ function SignUp() {
             />
           )}
 
-          {/* Doctor Fields */}
+          {/* New Doctor Fields */}
           {role === "DOCTOR" && (
             <>
               <input
